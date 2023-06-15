@@ -13,8 +13,10 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
     -- theme
-    { "folke/tokyonight.nvim", branch = "main" },
-    -- { "rebelot/kanagawa.nvim" },
+    { "rebelot/kanagawa.nvim" },
+    { "lukas-reineke/indent-blankline.nvim" },
+
+    { 'nmac427/guess-indent.nvim' },
 
     -- syntax highlighting
     { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
@@ -25,6 +27,8 @@ require('lazy').setup({
         dependencies = { 'nvim-lua/plenary.nvim' }
     },
 
+    { 'stevearc/oil.nvim' },
+
     -- navigation / controls
     { 'ggandor/leap.nvim' },
 
@@ -32,34 +36,35 @@ require('lazy').setup({
         "kylechui/nvim-surround",
         version = "*", -- Use for stability; omit to use `main` branch for the latest features
         event = "VeryLazy",
-        config = function()
-            require("nvim-surround").setup({
-                -- Configuration here, or leave empty to use defaults
-            })
-        end
     },
 
-    -- lsp
-	{
-		'VonHeikemen/lsp-zero.nvim',
-		branch = 'v2.x',
-		dependencies = {
-			-- LSP Support
-			{'neovim/nvim-lspconfig'},             -- Required
-			{                                      -- Optional
-			    'williamboman/mason.nvim',
-			    build = function()
-				    pcall(vim.cmd, 'MasonUpdate')
-			    end,
-			},
-			{'williamboman/mason-lspconfig.nvim'}, -- Optional
+    { 'numToStr/Comment.nvim' },
 
-			-- Autocompletion
-			{'hrsh7th/nvim-cmp'},     -- Required
-			{'hrsh7th/cmp-nvim-lsp'}, -- Required
-			{'L3MON4D3/LuaSnip'},     -- Required
-		}
-	},
+    -- lsp
+    {
+        'VonHeikemen/lsp-zero.nvim',
+        branch = 'v2.x',
+        dependencies = {
+            -- LSP Support
+            {'neovim/nvim-lspconfig'},             -- Required
+            {                                      -- Optional
+                'williamboman/mason.nvim',
+                build = function()
+                    pcall(vim.cmd, 'MasonUpdate')
+                end,
+            },
+            {'williamboman/mason-lspconfig.nvim'}, -- Optional
+
+            -- Autocompletion
+            {'hrsh7th/nvim-cmp'},     -- Required
+            {'hrsh7th/cmp-nvim-lsp'}, -- Required
+            {'L3MON4D3/LuaSnip'},     -- Required
+        }
+    },
+
+    { "ray-x/lsp_signature.nvim" },
+
+    { "github/copilot.vim" },
 
     {
         "folke/trouble.nvim",
@@ -76,5 +81,28 @@ require('lazy').setup({
     -- status line
     { 'nvim-lualine/lualine.nvim', dependencies = {'nvim-tree/nvim-web-devicons'} },
     { 'arkav/lualine-lsp-progress' },
-})
 
+    { 'ThePrimeagen/vim-be-good' },
+    { 'ThePrimeagen/harpoon' },
+    {
+        'saecki/crates.nvim',
+        dependencies = 'nvim-lua/plenary.nvim',
+        config = function()
+            require('crates').setup()
+        end,
+    }
+
+
+    -- RUST ANALYZER doesn't like this
+    -- {
+    --     'rmagatti/auto-session',
+    --     config = function()
+    --         require('auto-session').setup {
+    --             require("auto-session").setup {
+    --                 log_level = "error",
+    --                 auto_session_enable_last_session = true,
+    --             }
+    --         }
+    --     end
+    -- }
+})
