@@ -4,13 +4,24 @@ require('guess-indent').setup {}
 vim.filetype.add({
     extension = {
         wgsl = "wgsl",
-        eta = "vue",
     }
 })
 
+local parser_confg = require "nvim-treesitter.parsers".get_parser_configs()
+parser_config.jinja2 = {
+    install_info = {
+        url = "https://github.com/dbt-labs/tree-sitter-jinja2.git",
+        files = { "src/parser.c" },
+        branch = "main",
+        generate_requires_npm = false,
+        requires_generate_from_grammar = false,
+    },
+    filetype = "html",
+}
+
 -- syntax highlighting
 require("nvim-treesitter.configs").setup({
-    ensure_installed = { "c", "cpp", "lua", "typescript", "javascript", "astro", "wgsl", "pug", "html", "htmldjango" },
+    ensure_installed = { "c", "cpp", "lua", "typescript", "javascript", "astro", "wgsl", "pug", "html", "jinja2" },
     highlight = {
         enable = true,
         additional_vim_regex_highlighting = false,
@@ -62,3 +73,19 @@ lspconfig.rust_analyzer.setup {
 }
 
 lsp.setup()
+
+require("mason-null-ls").setup({
+    ensure_installed = {
+        -- Opt to list sources here, when available in mason.
+    },
+    automatic_installation = false,
+    handlers = {},
+})
+
+local null_ls = require("null-ls")
+
+null_ls.setup({
+    sources = {
+        null_ls.builtins.formatting.djhtml,
+    },
+})

@@ -16,7 +16,7 @@ require('lazy').setup({
     { "rebelot/kanagawa.nvim" },
     { "lukas-reineke/indent-blankline.nvim" },
 
-    { 'nmac427/guess-indent.nvim' },
+    { 'NMAC427/guess-indent.nvim' },
 
     -- syntax highlighting
     { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
@@ -60,6 +60,17 @@ require('lazy').setup({
             {'hrsh7th/cmp-nvim-lsp'}, -- Required
             {'L3MON4D3/LuaSnip'},     -- Required
         }
+    },
+
+    {
+        "jay-babu/mason-null-ls.nvim",
+        event = { "BufReadPre", "BufNewFile" },
+        dependencies = {
+          "williamboman/mason.nvim",
+          "jose-elias-alvarez/null-ls.nvim",
+        },
+        config = function()
+        end,
     },
 
     { "ray-x/lsp_signature.nvim" },
