@@ -4,10 +4,11 @@ require('guess-indent').setup {}
 vim.filetype.add({
     extension = {
         wgsl = "wgsl",
+        bee = "lisp",
     }
 })
 
-local parser_confg = require "nvim-treesitter.parsers".get_parser_configs()
+local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
 parser_config.jinja2 = {
     install_info = {
         url = "https://github.com/dbt-labs/tree-sitter-jinja2.git",
