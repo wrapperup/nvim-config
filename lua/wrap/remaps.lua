@@ -18,6 +18,11 @@ vim.keymap.set("n", "<C-j>", function() require("harpoon.ui").nav_file(2) end)
 vim.keymap.set("n", "<C-k>", function() require("harpoon.ui").nav_file(3) end)
 vim.keymap.set("n", "<C-l>", function() require("harpoon.ui").nav_file(4) end)
 
+vim.keymap.set("n", "<F3>", function() require("conform").format({
+    lsp_fallback = true,
+    async = true,
+}) end)
+
 -- remaps
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
@@ -39,7 +44,12 @@ vim.keymap.set("n", "<leader>Y", [["+Y]])
 local telescope = require('telescope')
 local builtin = require('telescope.builtin')
 
-vim.keymap.set("n", "-", function() require('oil').open() end)
+local oil = require('oil')
+if oil then
+    vim.keymap.set("n", "-", function() oil.open() end)
+else
+    vim.keymap.set("n", "-", function() vim.cmd "E" end)
+end
 vim.keymap.set("n", "<leader>pv", function() require('oil').open() end)
 
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})

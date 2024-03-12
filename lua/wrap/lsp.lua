@@ -1,28 +1,37 @@
 -- auto indent
-require('guess-indent').setup {}
+require('guess-indent').setup {
+    filetype_exclude = {
+        "javascript",
+        "typescript",
+        "javascriptreact",
+        "typescriptreact",
+    }
+}
 
 vim.filetype.add({
     extension = {
         wgsl = "wgsl",
         bee = "lisp",
+        bsc = "rust",
+        vto = "vento",
     }
 })
 
 local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
-parser_config.jinja2 = {
+parser_config.vento = {
     install_info = {
-        url = "https://github.com/dbt-labs/tree-sitter-jinja2.git",
-        files = { "src/parser.c" },
+        url = "file:///C:/Repos/js/tree-sitter-vento",
+        files = { "src/parser.c", "src/scanner.c" },
         branch = "main",
         generate_requires_npm = false,
         requires_generate_from_grammar = false,
     },
-    filetype = "html",
+    filetype = "vto",
 }
 
 -- syntax highlighting
 require("nvim-treesitter.configs").setup({
-    ensure_installed = { "c", "cpp", "lua", "typescript", "javascript", "astro", "wgsl", "pug", "html", "jinja2" },
+    ensure_installed = { "html", "c", "cpp", "lua", "typescript", "javascript", "astro", "wgsl", "rust", "embedded_template", "vento" },
     highlight = {
         enable = true,
         additional_vim_regex_highlighting = false,
@@ -52,6 +61,7 @@ lsp.on_attach(function(client, bufnr)
     require "lsp_signature".on_attach({
         floating_window = false,
     }, bufnr)
+
 end)
 
 lsp.set_sign_icons({
@@ -62,7 +72,20 @@ lsp.set_sign_icons({
 })
 
 local lspconfig = require('lspconfig')
+
+lspconfig.denols.setup {
+  on_attach = on_attach,
+  root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+}
+
+lspconfig.tsserver.setup {
+  on_attach = on_attach,
+  root_dir = lspconfig.util.root_pattern("package.json"),
+  single_file_support = false
+}
+
 lspconfig.lua_ls.setup(lsp.nvim_lua_ls())
+
 lspconfig.rust_analyzer.setup {
     settings = {
         ['rust-analyzer'] = {
@@ -75,18 +98,9 @@ lspconfig.rust_analyzer.setup {
 
 lsp.setup()
 
-require("mason-null-ls").setup({
-    ensure_installed = {
-        -- Opt to list sources here, when available in mason.
-    },
-    automatic_installation = false,
-    handlers = {},
-})
-
-local null_ls = require("null-ls")
-
-null_ls.setup({
-    sources = {
-        null_ls.builtins.formatting.djhtml,
-    },
+require("conform").setup({
+  formatters_by_ft = {
+    html = { "djlint" },
+    vto = { "djlint" },
+  },
 })

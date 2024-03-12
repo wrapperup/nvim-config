@@ -13,8 +13,37 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
     -- theme
-    { "rebelot/kanagawa.nvim" },
-    { "lukas-reineke/indent-blankline.nvim" },
+    {
+        "rose-pine/neovim",
+        as = "rose-pine",
+        config = function()
+            require("rose-pine").setup({
+                styles = {
+                    bold = true,
+                    italic = false,
+                    transparency = true,
+                },
+                before_highlight = function(group, highlight, palette)
+                    if highlight.undercurl then
+                        highlight.undercurl = false
+                    end
+                end,
+            })
+
+            vim.cmd('colorscheme rose-pine')
+        end
+    },
+
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
+        opts = {},
+        config = function()
+            -- require("ibl").setup {
+            --     indent = { char = "│" },
+            -- }
+        end
+    },
 
     { 'NMAC427/guess-indent.nvim' },
 
@@ -23,7 +52,7 @@ require('lazy').setup({
 
     -- fuzzy finder
     {
-        'nvim-telescope/telescope.nvim', tag = '0.1.1',
+        'nvim-telescope/telescope.nvim', tag = '0.1.5',
         dependencies = { 'nvim-lua/plenary.nvim' }
     },
 
@@ -58,19 +87,8 @@ require('lazy').setup({
             -- Autocompletion
             {'hrsh7th/nvim-cmp'},     -- Required
             {'hrsh7th/cmp-nvim-lsp'}, -- Required
-            {'L3MON4D3/LuaSnip'},     -- Required
+            {'L3MON4D3/LuaSnip', tag = "v2.2.0"},     -- Required
         }
-    },
-
-    {
-        "jay-babu/mason-null-ls.nvim",
-        event = { "BufReadPre", "BufNewFile" },
-        dependencies = {
-          "williamboman/mason.nvim",
-          "jose-elias-alvarez/null-ls.nvim",
-        },
-        config = function()
-        end,
     },
 
     { "ray-x/lsp_signature.nvim" },
@@ -101,19 +119,20 @@ require('lazy').setup({
         config = function()
             require('crates').setup()
         end,
-    }
+    },
 
+    {
+        "iamcco/markdown-preview.nvim",
+        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        ft = { "markdown" },
+        build = function() vim.fn["mkdp#util#install"]() end,
+    },
 
-    -- RUST ANALYZER doesn't like this
-    -- {
-    --     'rmagatti/auto-session',
-    --     config = function()
-    --         require('auto-session').setup {
-    --             require("auto-session").setup {
-    --                 log_level = "error",
-    --                 auto_session_enable_last_session = true,
-    --             }
-    --         }
-    --     end
-    -- }
+    -- formatting
+    {
+      'stevearc/conform.nvim',
+      opts = {},
+    },
+
+    { "mistricky/codesnap.nvim", build = "make" },
 })
