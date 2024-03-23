@@ -17,11 +17,3 @@ require('oil').setup({
 })
 
 require('nvim-surround').setup()
-
-require('codesnap').setup({
-    mac_window_bar = true,
-    opacity = true,
-    watermark = "",
-    preview_title = "CodeSnap.nvim",
-    editor_font_family = "CaskaydiaCove Nerd Font"
-})
