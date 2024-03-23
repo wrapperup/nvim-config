@@ -14,24 +14,16 @@ vim.filetype.add({
         bee = "lisp",
         bsc = "rust",
         vto = "vento",
+        jinja = "htmldjango",
+        html = "htmldjango",
     }
 })
 
 local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
-parser_config.vento = {
-    install_info = {
-        url = "file:///C:/Repos/js/tree-sitter-vento",
-        files = { "src/parser.c", "src/scanner.c" },
-        branch = "main",
-        generate_requires_npm = false,
-        requires_generate_from_grammar = false,
-    },
-    filetype = "vto",
-}
 
 -- syntax highlighting
 require("nvim-treesitter.configs").setup({
-    ensure_installed = { "html", "c", "cpp", "lua", "typescript", "javascript", "astro", "wgsl", "rust", "embedded_template", "vento" },
+    ensure_installed = { "vimdoc", "html", "htmldjango", "c", "cpp", "lua", "typescript", "javascript", "astro", "wgsl", "rust", "embedded_template", "vento" },
     highlight = {
         enable = true,
         additional_vim_regex_highlighting = false,
@@ -43,6 +35,9 @@ local lsp = require('lsp-zero').preset({})
 
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
+cmp.setup {
+  sources = { { name = 'nvim_lsp', trigger_characters = { '-' } } }
+}
 
 -- https://github.com/VonHeikemen/lsp-zero.nvim/blob/v2.x/doc/md/api-reference.md#default_keymapsopts
 local cmp_mappings = lsp.defaults.cmp_mappings({
@@ -73,6 +68,20 @@ lsp.set_sign_icons({
 
 local lspconfig = require('lspconfig')
 
+lspconfig.emmet_language_server.setup {
+    filetypes = {
+        "html",
+        "vento",
+    },
+}
+
+lspconfig.tailwindcss.setup {
+    filetypes = {
+        "html",
+        "vento",
+    },
+}
+
 lspconfig.denols.setup {
   on_attach = on_attach,
   root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
@@ -100,7 +109,9 @@ lsp.setup()
 
 require("conform").setup({
   formatters_by_ft = {
-    html = { "djlint" },
-    vto = { "djlint" },
+    html = { "dprint" },
+    vto = { "dprint" },
+    vento = { "dprint" },
+    jinja = { "dprint" },
   },
 })
