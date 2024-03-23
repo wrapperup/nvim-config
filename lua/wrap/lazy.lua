@@ -134,5 +134,15 @@ require('lazy').setup({
       opts = {},
     },
 
-    { "mistricky/codesnap.nvim", build = "make" },
+    {
+      "olrtg/nvim-emmet",
+      config = function()
+      end,
+    },
+
+    { "folke/neodev.nvim", opts = {} },
+
+    { "nvimdev/hlsearch.nvim",event = 'BufRead', config = function ()
+        require('hlsearch').setup()
+    end }
 })
