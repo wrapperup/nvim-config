@@ -3,6 +3,12 @@ vim.g.mapleader = " "
 local cfg = vim.fn.stdpath("config")
 local cfg_core = cfg .. "/lua/wrap"
 
+-- HARDMODE disable arrow keys
+vim.keymap.set("n", "<Up>", "<Nop>")
+vim.keymap.set("n", "<Down>", "<Nop>")
+vim.keymap.set("n", "<Left>", "<Nop>")
+vim.keymap.set("n", "<Right>", "<Nop>")
+
 -- config
 vim.keymap.set("n", "<leader>cv", function() vim.cmd.Ex(cfg_core) end)
 vim.keymap.set("n", "<leader>ci", function() vim.cmd.e(cfg .. "/init.lua") end)
@@ -18,6 +24,9 @@ vim.keymap.set("n", "<C-h>", function() require("harpoon.ui").nav_file(1) end)
 vim.keymap.set("n", "<C-j>", function() require("harpoon.ui").nav_file(2) end)
 vim.keymap.set("n", "<C-k>", function() require("harpoon.ui").nav_file(3) end)
 vim.keymap.set("n", "<C-l>", function() require("harpoon.ui").nav_file(4) end)
+
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 vim.keymap.set("n", "<M-o>", function() vim.cmd("ClangdSwitchSourceHeader") end)
 
