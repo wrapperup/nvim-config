@@ -105,6 +105,14 @@ lspconfig.rust_analyzer.setup {
     },
 }
 
+lspconfig.clangd.setup {
+  on_attach = on_attach,
+  cmd = {
+    "clangd",
+    "--offset-encoding=utf-16",
+  },
+}
+
 lsp.setup()
 
 require("conform").setup({
