@@ -1,13 +1,13 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable", -- latest stable release
-		lazypath,
-	})
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -52,7 +52,8 @@ require('lazy').setup({
 
     -- fuzzy finder
     {
-        'nvim-telescope/telescope.nvim', tag = '0.1.5',
+        'nvim-telescope/telescope.nvim',
+        tag = '0.1.5',
         dependencies = { 'nvim-lua/plenary.nvim' }
     },
 
@@ -75,19 +76,19 @@ require('lazy').setup({
         branch = 'v2.x',
         dependencies = {
             -- LSP Support
-            {'neovim/nvim-lspconfig'},             -- Required
-            {                                      -- Optional
+            { 'neovim/nvim-lspconfig' }, -- Required
+            {                          -- Optional
                 'williamboman/mason.nvim',
                 build = function()
                     pcall(vim.cmd, 'MasonUpdate')
                 end,
             },
-            {'williamboman/mason-lspconfig.nvim'}, -- Optional
+            { 'williamboman/mason-lspconfig.nvim' }, -- Optional
 
             -- Autocompletion
-            {'hrsh7th/nvim-cmp'},     -- Required
-            {'hrsh7th/cmp-nvim-lsp'}, -- Required
-            {'L3MON4D3/LuaSnip', tag = "v2.2.0"},     -- Required
+            { 'hrsh7th/nvim-cmp' },               -- Required
+            { 'hrsh7th/cmp-nvim-lsp' },           -- Required
+            { 'L3MON4D3/LuaSnip',                 tag = "v2.2.0" }, -- Required
         }
     },
 
@@ -100,15 +101,15 @@ require('lazy').setup({
         dependencies = "nvim-tree/nvim-web-devicons",
         config = function()
             require("trouble").setup {
-            -- your configuration comes here
-            -- or leave it empty to use the default settings
-            -- refer to the configuration section below
+                -- your configuration comes here
+                -- or leave it empty to use the default settings
+                -- refer to the configuration section below
             }
         end
     },
 
     -- status line
-    { 'nvim-lualine/lualine.nvim', dependencies = {'nvim-tree/nvim-web-devicons'} },
+    { 'nvim-lualine/lualine.nvim', dependencies = { 'nvim-tree/nvim-web-devicons' } },
     { 'arkav/lualine-lsp-progress' },
 
     { 'ThePrimeagen/vim-be-good' },
@@ -130,19 +131,27 @@ require('lazy').setup({
 
     -- formatting
     {
-      'stevearc/conform.nvim',
-      opts = {},
+        'stevearc/conform.nvim',
+        opts = {},
     },
 
     {
-      "olrtg/nvim-emmet",
-      config = function()
-      end,
+        "olrtg/nvim-emmet",
+        config = function()
+        end,
     },
 
-    { "folke/neodev.nvim", opts = {} },
+    { "folke/neodev.nvim",    opts = {} },
 
-    { "nvimdev/hlsearch.nvim",event = 'BufRead', config = function ()
-        require('hlsearch').setup()
-    end }
+    {
+        "nvimdev/hlsearch.nvim",
+        event = 'BufRead',
+        config = function()
+            require('hlsearch').setup()
+        end
+    },
+
+    { "zadirion/Unreal.nvim", dependencies = { "tpope/vim-dispatch" } },
+
+    { "jansedivy/jai.vim" },
 })
