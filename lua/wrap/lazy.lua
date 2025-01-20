@@ -60,7 +60,10 @@ require('lazy').setup({
     { 'stevearc/oil.nvim' },
 
     -- navigation / controls
-    { 'ggandor/leap.nvim' },
+    {
+        'ggandor/leap.nvim',
+        event = "VeryLazy",
+    },
 
     {
         "kylechui/nvim-surround",
@@ -77,7 +80,7 @@ require('lazy').setup({
         dependencies = {
             -- LSP Support
             { 'neovim/nvim-lspconfig' }, -- Required
-            {                          -- Optional
+            {                            -- Optional
                 'williamboman/mason.nvim',
                 build = function()
                     pcall(vim.cmd, 'MasonUpdate')
@@ -86,15 +89,18 @@ require('lazy').setup({
             { 'williamboman/mason-lspconfig.nvim' }, -- Optional
 
             -- Autocompletion
-            { 'hrsh7th/nvim-cmp' },               -- Required
-            { 'hrsh7th/cmp-nvim-lsp' },           -- Required
-            { 'L3MON4D3/LuaSnip',                 tag = "v2.2.0" }, -- Required
+            { 'hrsh7th/nvim-cmp' },     -- Required
+            { 'hrsh7th/cmp-nvim-lsp' }, -- Required
+            { 'L3MON4D3/LuaSnip' },     -- Required
         }
     },
 
-    { "ray-x/lsp_signature.nvim" },
+    {
+        "ray-x/lsp_signature.nvim",
+        event = "VeryLazy",
+    },
 
-    { "github/copilot.vim" },
+    -- { "github/copilot.vim" },
 
     {
         "folke/trouble.nvim",
@@ -109,17 +115,20 @@ require('lazy').setup({
     },
 
     -- status line
-    { 'nvim-lualine/lualine.nvim', dependencies = { 'nvim-tree/nvim-web-devicons' } },
-    { 'arkav/lualine-lsp-progress' },
-
-    { 'ThePrimeagen/vim-be-good' },
-    { 'ThePrimeagen/harpoon' },
     {
-        'saecki/crates.nvim',
-        dependencies = 'nvim-lua/plenary.nvim',
-        config = function()
-            require('crates').setup()
-        end,
+        'nvim-lualine/lualine.nvim',
+        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        event = "VeryLazy",
+    },
+
+    {
+        'arkav/lualine-lsp-progress',
+        event = "VeryLazy",
+    },
+
+    {
+        'ThePrimeagen/harpoon',
+        event = "VeryLazy",
     },
 
     {
@@ -132,6 +141,7 @@ require('lazy').setup({
     -- formatting
     {
         'stevearc/conform.nvim',
+        event = "VeryLazy",
         opts = {},
     },
 
@@ -141,8 +151,6 @@ require('lazy').setup({
         end,
     },
 
-    { "folke/neodev.nvim",    opts = {} },
-
     {
         "nvimdev/hlsearch.nvim",
         event = 'BufRead',
@@ -151,7 +159,37 @@ require('lazy').setup({
         end
     },
 
-    { "zadirion/Unreal.nvim", dependencies = { "tpope/vim-dispatch" } },
+    {
+        'stevearc/overseer.nvim',
+        event = "VeryLazy",
+        opts = {},
+    },
 
-    { "jansedivy/jai.vim" },
+    {
+        'gabrielpoca/replacer.nvim',
+        event = "VeryLazy",
+        opts = { rename_files = false },
+        keys = {
+            {
+                '<leader>h',
+                function() require('replacer').run() end,
+                desc = "run replacer.nvim"
+            }
+        },
+    },
+
+    -- {
+    --     'windwp/nvim-autopairs',
+    --     event = "InsertEnter",
+    --     config = true
+    --     -- use opts = {} for passing setup options
+    --     -- this is equalent to setup({}) function
+    -- },
+
+    {
+        'rluba/jai.vim',
+        init = function ()
+            vim.g.b = {case_labels = 0}
+        end
+    },
 })

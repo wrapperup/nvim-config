@@ -4,6 +4,7 @@
 -- Author: shadmansaleh
 -- Credit: glepnir
 local lualine = require('lualine')
+local overseer = require('overseer')
 
 -- Color table for highlights
 -- stylua: ignore
@@ -229,6 +230,23 @@ ins_right {
     end,
     color = { fg = colors.blue },
     padding = { left = 1 },
+}
+
+ins_right {
+    "overseer",
+    label = 'overseer',       -- Prefix for task counts
+    colored = true,   -- Color the task icons and counts
+    symbols = {
+        [overseer.STATUS.FAILURE] = " - ",
+        [overseer.STATUS.CANCELED] = " - ",
+        [overseer.STATUS.SUCCESS] = " - ",
+        [overseer.STATUS.RUNNING] = "󰐌 - ",
+    },
+    unique = true,       -- Unique-ify non-running task count by name
+    name = nil,           -- List of task names to search for
+    name_not = false,     -- When true, invert the name search
+    status = nil,         -- List of task statuses to display
+    status_not = false,   -- When true, invert the status search
 }
 
 -- Now don't forget to initialize lualine

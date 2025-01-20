@@ -17,3 +17,5 @@ require('oil').setup({
 })
 
 require('nvim-surround').setup()
+
+require('overseer').setup()

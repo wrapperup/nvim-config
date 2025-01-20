@@ -19,11 +19,15 @@ vim.keymap.set("n", "<C-j>", function() require("harpoon.ui").nav_file(2) end)
 vim.keymap.set("n", "<C-k>", function() require("harpoon.ui").nav_file(3) end)
 vim.keymap.set("n", "<C-l>", function() require("harpoon.ui").nav_file(4) end)
 
+vim.keymap.set("n", "Q", "@@")
+
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 vim.keymap.set("v", "<S-Down>", ":m '>+1<CR>gv=gv") 
 vim.keymap.set("v", "<S-Up>", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "<S-Left>",  "<gv") 
+vim.keymap.set("v", "<S-Right>", ">gv")
 
 vim.keymap.set("n", "<M-o>", function() vim.cmd("ClangdSwitchSourceHeader") end)
 
@@ -61,14 +65,89 @@ else
 end
 vim.keymap.set("n", "<leader>pv", function() require("oil").open() end)
 
+
+-- telescope
+
+local filetype_to_std_lib = {
+  jai = "C:/Repos/jai/jai",
+  odin = "C:/Repos/odin/Odin",
+}
+
+local find_file_in_std = function()
+  local filetype = vim.bo.filetype;
+
+  if filetype_to_std_lib[filetype] ~= nil then
+    builtin.find_files({ cwd = filetype_to_std_lib[filetype] })
+  end
+end
+
+local live_grep_in_std = function()
+  local filetype = vim.bo.filetype;
+
+  if filetype_to_std_lib[filetype] ~= nil then
+    builtin.live_grep({ cwd = filetype_to_std_lib[filetype] })
+  end
+end
+
 vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
+vim.keymap.set("n", "<leader>F",  find_file_in_std, {})
 vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
+vim.keymap.set("n", "<leader>G",  live_grep_in_std, {})
+vim.keymap.set("n", "<leader>fcf",  function() builtin.find_files { cwd = cfg } end, {})
+vim.keymap.set("n", "<leader>fcg",  function() builtin.live_grep { cwd = cfg } end, {})
 vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
 vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
+vim.keymap.set("n", "<leader>fr", builtin.resume, {})
+vim.keymap.set("n", "<leader>fq", builtin.quickfix, {})
 vim.keymap.set("n", "gu", function() builtin.lsp_references({ include_declaration = false }) end, {})
 vim.keymap.set("n", "gd", function() builtin.lsp_definitions({}) end, {})
+
+vim.keymap.set("n", "<leader>h", function() require("replacer").run() end, {})
+
+vim.keymap.set("n", "<C-Right>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-Left>", "<cmd>cprev<CR>zz")
 
 vim.keymap.set({ "n", "v" }, "<leader>xe", require("nvim-emmet").wrap_with_abbreviation)
 
 require("leap").add_default_mappings()
 require("Comment").setup()
+
+vim.api.nvim_create_user_command("OverseerRestartLast", function()
+  local overseer = require("overseer")
+  local tasks = overseer.list_tasks({ recent_first = true })
+  if vim.tbl_isempty(tasks) then
+    -- no tasks to restart, let the user pick
+    overseer.run_template()
+  else
+    overseer.run_action(tasks[1], "restart")
+  end
+end, {})
+
+-- trouble
+vim.keymap.set("n", "]d", function() vim.diagnostic.goto_next() end, opts)
+vim.keymap.set("n", "[d", function() vim.diagnostic.goto_prev() end, opts)
+
+vim.keymap.set("n", "<F5>", function() vim.cmd "OverseerRestartLast" end)
+vim.keymap.set("n", "<S-F5>", function() vim.cmd "OverseerRun" end)
+
+vim.keymap.set('n', '<A-Down>', function() vim.cmd.wincmd('j') end)
+vim.keymap.set('n', '<A-Up>', function() vim.cmd.wincmd('k') end)
+vim.keymap.set('n', '<A-Left>', function() vim.cmd.wincmd('h') end)
+vim.keymap.set('n', '<A-Right>', function() vim.cmd.wincmd('l') end)
+
+vim.keymap.set('n', '<A-S-Down>', ':resize +20<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<A-S-Up>', ':resize -20<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<A-S-Left>', ':vertical resize +20<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<A-S-Right>', ':vertical resize -20<CR>', { noremap = true, silent = true })
+
+vim.keymap.set('n', '<C-w-Down>', function() vim.cmd.wincmd('j') end)
+vim.keymap.set('n', '<C-w-Up>', function() vim.cmd.wincmd('k') end)
+vim.keymap.set('n', '<C-w-Left>', function() vim.cmd.wincmd('h') end)
+vim.keymap.set('n', '<C-w-Right>', function() vim.cmd.wincmd('l') end)
+
+vim.keymap.set('n', '<C-S-Down>', ':resize +20<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-S-Up>', ':resize -20<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-S-Left>', ':vertical resize +20<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-S-Right>', ':vertical resize -20<CR>', { noremap = true, silent = true })
+
+vim.keymap.set('i', '<C-cr>', function() require("cmp").complete() end)
