@@ -59,12 +59,6 @@ require('lazy').setup({
 
     { 'stevearc/oil.nvim' },
 
-    -- navigation / controls
-    {
-        'ggandor/leap.nvim',
-        event = "VeryLazy",
-    },
-
     {
         "kylechui/nvim-surround",
         version = "*", -- Use for stability; omit to use `main` branch for the latest features
@@ -74,26 +68,17 @@ require('lazy').setup({
     { 'numToStr/Comment.nvim' },
 
     -- lsp
-    {
-        'VonHeikemen/lsp-zero.nvim',
-        branch = 'v2.x',
-        dependencies = {
-            -- LSP Support
-            { 'neovim/nvim-lspconfig' }, -- Required
-            {                            -- Optional
-                'williamboman/mason.nvim',
-                build = function()
-                    pcall(vim.cmd, 'MasonUpdate')
-                end,
-            },
-            { 'williamboman/mason-lspconfig.nvim' }, -- Optional
-
-            -- Autocompletion
-            { 'hrsh7th/nvim-cmp' },     -- Required
-            { 'hrsh7th/cmp-nvim-lsp' }, -- Required
-            { 'L3MON4D3/LuaSnip' },     -- Required
-        }
+    {'neovim/nvim-lspconfig'},
+    {'hrsh7th/cmp-nvim-lsp'},
+    {'hrsh7th/nvim-cmp'},
+    -- { 'L3MON4D3/LuaSnip', event = "VeryLazy" },
+    {                            -- Optional
+        'williamboman/mason.nvim',
+        build = function()
+            pcall(vim.cmd, 'MasonUpdate')
+        end,
     },
+    { 'williamboman/mason-lspconfig.nvim' }, -- Optional
 
     {
         "ray-x/lsp_signature.nvim",
@@ -155,11 +140,6 @@ require('lazy').setup({
     },
 
     {
-        'arkav/lualine-lsp-progress',
-        event = "VeryLazy",
-    },
-
-    {
         'ThePrimeagen/harpoon',
         event = "VeryLazy",
     },
@@ -178,46 +158,19 @@ require('lazy').setup({
         opts = {},
     },
 
-    {
-        "olrtg/nvim-emmet",
-        config = function()
-        end,
-    },
-
-    {
-        "nvimdev/hlsearch.nvim",
-        event = 'BufRead',
-        config = function()
-            require('hlsearch').setup()
-        end
-    },
+    -- {
+    --     "nvimdev/hlsearch.nvim",
+    --     event = 'BufRead',
+    --     config = function()
+    --         require('hlsearch').setup()
+    --     end
+    -- },
 
     {
         'stevearc/overseer.nvim',
         event = "VeryLazy",
         opts = {},
     },
-
-    {
-        'gabrielpoca/replacer.nvim',
-        event = "VeryLazy",
-        opts = { rename_files = false },
-        keys = {
-            {
-                '<leader>h',
-                function() require('replacer').run() end,
-                desc = "run replacer.nvim"
-            }
-        },
-    },
-
-    -- {
-    --     'windwp/nvim-autopairs',
-    --     event = "InsertEnter",
-    --     config = true
-    --     -- use opts = {} for passing setup options
-    --     -- this is equalent to setup({}) function
-    -- },
 
     {
         'rluba/jai.vim',
