@@ -12,13 +12,15 @@ vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
 vim.o.hlsearch = true
 vim.cmd.nohlsearch()
 
--- Set the shell to pwsh
-vim.o.shell = "pwsh.exe"
-vim.o.shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command $PSStyle.OutputRendering = 'PlainText';"
-vim.o.shellredir = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
-vim.o.shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
-vim.o.shellquote = ""
-vim.o.shellxquote = ""
+if vim.fn.has('win32') then
+    -- Set the shell to pwsh
+    vim.o.shell = "pwsh.exe"
+    vim.o.shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command $PSStyle.OutputRendering = 'PlainText';"
+    vim.o.shellredir = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
+    vim.o.shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
+    vim.o.shellquote = ""
+    vim.o.shellxquote = ""
+end
 
 -- local server = '\\\\.\\pipe\\nvim-pipe-1234'
 -- vim.fn.serverstart(server)
