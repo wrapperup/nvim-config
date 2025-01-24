@@ -104,9 +104,6 @@ vim.keymap.set("n", "gd", function() builtin.lsp_definitions({}) end, {})
 
 vim.keymap.set("n", "<leader>h", function() require("replacer").run() end, {})
 
-vim.keymap.set("n", "<C-Right>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-Left>", "<cmd>cprev<CR>zz")
-
 vim.keymap.set({ "n", "v" }, "<leader>xe", require("nvim-emmet").wrap_with_abbreviation)
 
 require("leap").add_default_mappings()
@@ -130,20 +127,20 @@ vim.keymap.set("n", "[d", function() vim.diagnostic.goto_prev() end, opts)
 vim.keymap.set("n", "<F5>", function() vim.cmd "OverseerRestartLast" end)
 vim.keymap.set("n", "<S-F5>", function() vim.cmd "OverseerRun" end)
 
-vim.keymap.set('n', '<A-Down>', function() vim.cmd.wincmd('j') end)
-vim.keymap.set('n', '<A-Up>', function() vim.cmd.wincmd('k') end)
-vim.keymap.set('n', '<A-Left>', function() vim.cmd.wincmd('h') end)
-vim.keymap.set('n', '<A-Right>', function() vim.cmd.wincmd('l') end)
-
-vim.keymap.set('n', '<A-S-Down>', ':resize +20<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<A-S-Up>', ':resize -20<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<A-S-Left>', ':vertical resize +20<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<A-S-Right>', ':vertical resize -20<CR>', { noremap = true, silent = true })
-
-vim.keymap.set('n', '<C-w-Down>', function() vim.cmd.wincmd('j') end)
-vim.keymap.set('n', '<C-w-Up>', function() vim.cmd.wincmd('k') end)
-vim.keymap.set('n', '<C-w-Left>', function() vim.cmd.wincmd('h') end)
-vim.keymap.set('n', '<C-w-Right>', function() vim.cmd.wincmd('l') end)
+-- vim.keymap.set('n', '<A-Down>', function() vim.cmd.wincmd('j') end)
+-- vim.keymap.set('n', '<A-Up>', function() vim.cmd.wincmd('k') end)
+-- vim.keymap.set('n', '<A-Left>', function() vim.cmd.wincmd('h') end)
+-- vim.keymap.set('n', '<A-Right>', function() vim.cmd.wincmd('l') end)
+--
+-- vim.keymap.set('n', '<A-S-Down>', ':resize +20<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<A-S-Up>', ':resize -20<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<A-S-Left>', ':vertical resize +20<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<A-S-Right>', ':vertical resize -20<CR>', { noremap = true, silent = true })
+--
+vim.keymap.set('n', '<C-Down>', function() vim.cmd.wincmd('j') end)
+vim.keymap.set('n', '<C-Up>', function() vim.cmd.wincmd('k') end)
+vim.keymap.set('n', '<C-Left>', function() vim.cmd.wincmd('h') end)
+vim.keymap.set('n', '<C-Right>', function() vim.cmd.wincmd('l') end)
 
 vim.keymap.set('n', '<C-S-Down>', ':resize +20<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-S-Up>', ':resize -20<CR>', { noremap = true, silent = true })

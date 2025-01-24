@@ -13,13 +13,12 @@ vim.o.hlsearch = true
 vim.cmd.nohlsearch()
 
 -- Set the shell to pwsh
-vim.o.shell = "pwsh" -- and "pwsh" or "powershell"
-vim.o.shellcmdflag = '-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned -Command [System.Environment]::SetEnvironmentVariable("TERM","dumb")'
-vim.o.shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
-vim.o.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
-vim.o.shellquote = ''
-vim.o.shellxquote = ''
-
+vim.o.shell = "pwsh.exe"
+vim.o.shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command $PSStyle.OutputRendering = 'PlainText';"
+vim.o.shellredir = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
+vim.o.shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
+vim.o.shellquote = ""
+vim.o.shellxquote = ""
 
 -- local server = '\\\\.\\pipe\\nvim-pipe-1234'
 -- vim.fn.serverstart(server)
