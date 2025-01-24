@@ -23,35 +23,6 @@ vim.filetype.add({
 
 local parser_config = require ("nvim-treesitter.parsers").get_parser_configs()
 
--- parser_config.jai = {
---     install_info = {
---         url = "https://github.com/constantitus/tree-sitter-jai",
---         files = { "src/parser.c" },
---     },
---     filetype = "jai",
---     filetype_to_parsername = "jai",
---     indent = {
---         enable = true
---     }
--- }
---
--- require('nvim-treesitter.configs').setup {
---     highlight = {
---         enable = true,
---         additional_vim_regex_highlighting = false,
---     },
---     indent = {
---         enable = true,
---     },
---     ensure_installed = {"jai"}, -- Add "jai" here if needed, or leave it empty
--- }
---
--- vim.filetype.add({
---     extension = {
---         jai = "jai",
---     },
--- })
-
 -- syntax highlighting
 require("nvim-treesitter.configs").setup({
     ensure_installed = { "vimdoc", "html", "htmldjango", "c", "cpp", "lua", "typescript", "javascript", "astro", "wgsl", "rust", "embedded_template", "vento" },
@@ -61,29 +32,40 @@ require("nvim-treesitter.configs").setup({
     },
 })
 
--- lsp
-local lsp = require('lsp-zero').preset({})
+-- Reserve a space in the gutter
+-- This will avoid an annoying layout shift in the screen
+vim.opt.signcolumn = 'yes'
+
+-- Add cmp_nvim_lsp capabilities settings to lspconfig
+-- This should be executed before you configure any language server
+local lspconfig_defaults = require('lspconfig').util.default_config
+lspconfig_defaults.capabilities = vim.tbl_deep_extend(
+  'force',
+  lspconfig_defaults.capabilities,
+  require('cmp_nvim_lsp').default_capabilities()
+)
+
+-- This is where you enable features that only work
+-- if there is a language server active in the file
+vim.api.nvim_create_autocmd('LspAttach', {
+  desc = 'LSP actions',
+  callback = function(event)
+    local opts = {buffer = event.buf}
+
+    vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+    vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
+    vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
+    vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
+    vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
+    vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
+    vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
+    vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+    vim.keymap.set({'n', 'x'}, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
+    vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+  end,
+})
 
 local cmp = require('cmp')
-
--- cmp.setup {
---     sources = { { name = 'nvim_lsp', trigger_characters = { '-' } } },
--- }
---
--- -- https://github.com/VonHeikemen/lsp-zero.nvim/blob/v2.x/doc/md/api-reference.md#default_keymapsopts
--- local cmp_mappings = lsp.defaults.cmp_mappings({
---     ['<CR>'] = cmp.mapping.confirm({
---         behavior = cmp.ConfirmBehavior.Replace,
---         select = true
---     }),
--- })
-
--- cmp_mappings['<Tab>'] = nil
--- cmp_mappings['<S-Tab>'] = nil
-
--- lsp.setup_nvim_cmp({
---     mapping = cmp_mappings,
--- })
 
 cmp.setup({
     sources = {
@@ -118,66 +100,37 @@ cmp.setup({
     },
 })
 
-lsp.on_attach(function(client, bufnr)
-    lsp.default_keymaps({ buffer = bufnr })
-    require "lsp_signature".on_attach({
-        floating_window = false,
-    }, bufnr)
-end)
+-- lsp.on_attach(function(client, bufnr)
+--     lsp.default_keymaps({ buffer = bufnr })
+--     require "lsp_signature".on_attach({
+--         floating_window = false,
+--     }, bufnr)
+-- end)
+--
+-- lsp.set_sign_icons({
+--     error = '',
+--     warn = '',
+--     hint = '',
+--     info = '󰋼'
+-- })
 
-lsp.set_sign_icons({
-    error = '',
-    warn = '',
-    hint = '',
-    info = '󰋼'
+require("conform").setup({
+    formatters_by_ft = {
+        html = { "dprint" },
+        vto = { "dprint" },
+        vento = { "dprint" },
+        jinja = { "dprint" },
+    },
 })
 
 local lspconfig = require('lspconfig')
-local configs = require("lspconfig.configs")
-
--- if not configs.jails then
---   configs.jails = {
---     default_config = {
---       cmd = { 'jails' },
---       root_dir = lspconfig.util.root_pattern("jails.json", "build.jai", "main.jai"),
---       filetypes = { 'jai' },
---       name = "Jails",
---     },
---   }
--- end
--- lspconfig.jails.setup {}
 
 lspconfig.ols.setup {}
-
-lspconfig.emmet_language_server.setup {
-    filetypes = {
-        "html",
-        "vento",
-    },
-}
-
-lspconfig.tailwindcss.setup {
-    filetypes = {
-        "html",
-        "vento",
-    },
-}
 
 lspconfig.slangd.setup {
     filetypes = {
         "slang",
     },
-}
-
-vim.lsp.start({
-	name = "jai",
-	cmd = { "jails" },
-	root_dir = vim.fn.getcwd(), -- Use PWD as project root dir.
-})
-
-lspconfig.denols.setup {
-    on_attach = on_attach,
-    root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
 }
 
 lspconfig.ts_ls.setup {
@@ -186,7 +139,7 @@ lspconfig.ts_ls.setup {
     single_file_support = false
 }
 
-lspconfig.lua_ls.setup(lsp.nvim_lua_ls())
+lspconfig.lua_ls.setup({})
 
 lspconfig.rust_analyzer.setup {
     settings = {
@@ -198,22 +151,3 @@ lspconfig.rust_analyzer.setup {
         },
     },
 }
-
-lspconfig.clangd.setup {
-    on_attach = on_attach,
-    cmd = {
-        "clangd",
-        "--offset-encoding=utf-16",
-    },
-}
-
-lsp.setup()
-
-require("conform").setup({
-    formatters_by_ft = {
-        html = { "dprint" },
-        vto = { "dprint" },
-        vento = { "dprint" },
-        jinja = { "dprint" },
-    },
-})
