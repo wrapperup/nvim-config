@@ -65,7 +65,7 @@ require('lazy').setup({
         event = "VeryLazy",
     },
 
-    { 'numToStr/Comment.nvim' },
+    { 'echasnovski/mini.comment', version = false },
 
     -- lsp
     { "neovim/nvim-lspconfig" },

@@ -147,11 +147,7 @@ end
 ----------------------------------------------------------------------------
 
 vim.keymap.set('i', '<C-cr>', function() require("cmp").complete() end)
-
-require("Comment").setup()
-
 vim.keymap.set("n", "<M-o>", function() vim.cmd("ClangdSwitchSourceHeader") end)
-
 vim.keymap.set("n", "<F3>", function() require("conform").format({
     lsp_fallback = true,
     async = true,
