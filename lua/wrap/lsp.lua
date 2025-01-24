@@ -123,6 +123,8 @@ require("conform").setup({
     },
 })
 
+require("mason").setup()
+
 local lspconfig = require('lspconfig')
 
 lspconfig.ols.setup {}

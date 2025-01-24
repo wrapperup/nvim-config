@@ -68,17 +68,12 @@ require('lazy').setup({
     { 'numToStr/Comment.nvim' },
 
     -- lsp
-    {'neovim/nvim-lspconfig'},
-    {'hrsh7th/cmp-nvim-lsp'},
-    {'hrsh7th/nvim-cmp'},
-    -- { 'L3MON4D3/LuaSnip', event = "VeryLazy" },
-    {                            -- Optional
-        'williamboman/mason.nvim',
-        build = function()
-            pcall(vim.cmd, 'MasonUpdate')
-        end,
-    },
-    { 'williamboman/mason-lspconfig.nvim' }, -- Optional
+    { "neovim/nvim-lspconfig" },
+    { "hrsh7th/cmp-nvim-lsp" },
+    { "hrsh7th/nvim-cmp" },
+    -- {  "L3MON4D3/LuaSnip" },
+    { "williamboman/mason.nvim" },
+    { "williamboman/mason-lspconfig.nvim" },
 
     {
         "ray-x/lsp_signature.nvim",
