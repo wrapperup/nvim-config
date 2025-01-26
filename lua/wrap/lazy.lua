@@ -11,7 +11,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require('lazy').setup({
+require("lazy").setup({
     -- theme
     {
         "rose-pine/neovim",
@@ -30,7 +30,7 @@ require('lazy').setup({
                 end,
             })
 
-            vim.cmd('colorscheme rose-pine')
+            vim.cmd("colorscheme rose-pine")
         end
     },
 
@@ -45,7 +45,7 @@ require('lazy').setup({
         end
     },
 
-    { 'NMAC427/guess-indent.nvim' },
+    { "NMAC427/guess-indent.nvim" },
 
     -- syntax highlighting
     { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
@@ -57,7 +57,17 @@ require('lazy').setup({
         dependencies = { "nvim-lua/plenary.nvim" }
     },
 
-    { 'stevearc/oil.nvim' },
+    -- the goat
+    { "stevearc/oil.nvim" },
+    { "stevearc/conform.nvim" },
+    { "stevearc/overseer.nvim" },
+    {
+        'stevearc/quicker.nvim',
+        event = "FileType qf",
+        ---@module "quicker"
+        ---@type quicker.SetupOptions
+        opts = {},
+    },
 
     {
         "kylechui/nvim-surround",
@@ -65,13 +75,13 @@ require('lazy').setup({
         event = "VeryLazy",
     },
 
-    { 'echasnovski/mini.comment', version = false },
+    { "echasnovski/mini.comment", version = false },
 
     -- lsp
     { "neovim/nvim-lspconfig" },
     { "hrsh7th/cmp-nvim-lsp" },
     { "hrsh7th/nvim-cmp" },
-    -- {  "L3MON4D3/LuaSnip" },
+    {  "L3MON4D3/LuaSnip" },
     { "williamboman/mason.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
 
@@ -129,13 +139,13 @@ require('lazy').setup({
 
     -- status line
     {
-        'nvim-lualine/lualine.nvim',
-        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        "nvim-lualine/lualine.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
         event = "VeryLazy",
     },
 
     {
-        'ThePrimeagen/harpoon',
+        "ThePrimeagen/harpoon",
         event = "VeryLazy",
     },
 
@@ -146,29 +156,8 @@ require('lazy').setup({
         build = function() vim.fn["mkdp#util#install"]() end,
     },
 
-    -- formatting
     {
-        'stevearc/conform.nvim',
-        event = "VeryLazy",
-        opts = {},
-    },
-
-    -- {
-    --     "nvimdev/hlsearch.nvim",
-    --     event = 'BufRead',
-    --     config = function()
-    --         require('hlsearch').setup()
-    --     end
-    -- },
-
-    {
-        'stevearc/overseer.nvim',
-        event = "VeryLazy",
-        opts = {},
-    },
-
-    {
-        'rluba/jai.vim',
+        "rluba/jai.vim",
         init = function ()
             vim.g.b = {case_labels = 0}
         end

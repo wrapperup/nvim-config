@@ -30,32 +30,37 @@ vim.keymap.set("n", "[d", function() vim.diagnostic.goto_prev() end)
 vim.keymap.set("n", "<C-]>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-[>", "<cmd>cprev<CR>zz")
 
-vim.keymap.set('n', '<C-Down>', function() vim.cmd.wincmd('j') end)
-vim.keymap.set('n', '<C-Up>', function() vim.cmd.wincmd('k') end)
-vim.keymap.set('n', '<C-Left>', function() vim.cmd.wincmd('h') end)
-vim.keymap.set('n', '<C-Right>', function() vim.cmd.wincmd('l') end)
+vim.keymap.set("n", "<C-Down>", function() vim.cmd.wincmd("j") end)
+vim.keymap.set("n", "<C-Up>", function() vim.cmd.wincmd("k") end)
+vim.keymap.set("n", "<C-Left>", function() vim.cmd.wincmd("h") end)
+vim.keymap.set("n", "<C-Right>", function() vim.cmd.wincmd("l") end)
 
-vim.keymap.set('n', '<C-S-Down>', ':resize +20<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<C-S-Up>', ':resize -20<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<C-S-Left>', ':vertical resize +20<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<C-S-Right>', ':vertical resize -20<CR>', { noremap = true, silent = true })
+vim.keymap.set("n", "<C-S-Down>", ":resize +20<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-S-Up>", ":resize -20<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-S-Left>", ":vertical resize +20<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-S-Right>", ":vertical resize -20<CR>", { noremap = true, silent = true })
 
 -- Center on page scrolling
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
--- idk sometimes I just hit shift and it's annoying
+-- idk sometimes I just hit shift and it"s annoying
 vim.api.nvim_create_user_command("W", "w", { desc = "Write" })
 vim.api.nvim_create_user_command("Wq", "wq", { desc = "Write quit" })
 vim.api.nvim_create_user_command("Wqa", "wqa", { desc = "Write quit all" })
 vim.api.nvim_create_user_command("Q", "q", { desc = "Quit" })
 vim.api.nvim_create_user_command("Qa", "qa", { desc = "Quit All" })
+vim.api.nvim_create_user_command("Vs", "vs", { desc = "Vertical split" })
+vim.api.nvim_create_user_command("Sp", "sp", { desc = "Horizontal split" })
 
 -- leader yank / paste
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
+
+-- Exit terminal mode like insert 
+vim.keymap.set("t", "<ESC>", "<C-\\><C-N>")
 
 ----------------------------------------------------------------------------
 -- harpoon
@@ -85,7 +90,7 @@ vim.keymap.set("n", "<leader>pv", function() require("oil").open() end)
 -- telescope
 ----------------------------------------------------------------------------
 
-local builtin = require('telescope.builtin')
+local builtin = require("telescope.builtin")
 
 local filetype_to_std_lib = {
   jai = "C:/Repos/jai/jai",
@@ -125,7 +130,7 @@ end
 -- Overseer.nvim
 ----------------------------------------------------------------------------
 
-local overseer = require('overseer')
+local overseer = require("overseer")
 
 if overseer then
   vim.api.nvim_create_user_command("OverseerRestartLast", function()
@@ -146,7 +151,7 @@ end
 -- Formatting / Code Completion /Misc
 ----------------------------------------------------------------------------
 
-vim.keymap.set('i', '<C-cr>', function() require("cmp").complete() end)
+vim.keymap.set("i", "<C-cr>", function() require("cmp").complete() end)
 vim.keymap.set("n", "<M-o>", function() vim.cmd("ClangdSwitchSourceHeader") end)
 vim.keymap.set("n", "<F3>", function() require("conform").format({
     lsp_fallback = true,

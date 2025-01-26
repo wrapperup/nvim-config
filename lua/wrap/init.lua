@@ -1,6 +1,38 @@
+vim.opt.nu = true
+vim.opt.relativenumber = true
+
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+
+vim.opt.smartindent = true
+
+vim.opt.wrap = false
+
+vim.opt.hlsearch = false
+vim.opt.incsearch = true
+
+vim.opt.termguicolors = true
+
+vim.opt.scrolloff = 8
+vim.opt.signcolumn = "yes"
+vim.opt.isfname:append("@-@")
+
+vim.opt.updatetime = 50
+
+vim.g.netrw_browse_split = 0
+vim.g.netrw_banner = 0
+vim.g.netrw_winsize = 25
+
 vim.g.b = {case_labels = 0}
 
 require("wrap.lazy")
+
+local my_group = vim.api.nvim_create_augroup("my-group", { clear = true })
 
 vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0
@@ -57,7 +89,17 @@ if vim.g.neovide then
     vim.g.neovide_cursor_vfx_mode = ""
 end
 
+vim.api.nvim_create_autocmd("TermOpen", {
+    group = my_group,
+    callback = function()
+        vim.wo.number = false
+        vim.wo.relativenumber = false
+        vim.wo.signcolumn = "no"
+    end
+})
+
 require("wrap.remaps")
 require("wrap.theme")
 require("wrap.lsp")
 require("wrap.setup")
+require("wrap.raddbg")

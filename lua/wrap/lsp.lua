@@ -100,28 +100,14 @@ cmp.setup({
     },
 })
 
--- lsp.on_attach(function(client, bufnr)
---     lsp.default_keymaps({ buffer = bufnr })
---     require "lsp_signature".on_attach({
---         floating_window = false,
---     }, bufnr)
--- end)
---
--- lsp.set_sign_icons({
---     error = '',
---     warn = '',
---     hint = '',
---     info = '󰋼'
--- })
-
-require("conform").setup({
+require("conform").setup {
     formatters_by_ft = {
         html = { "dprint" },
         vto = { "dprint" },
         vento = { "dprint" },
         jinja = { "dprint" },
     },
-})
+}
 
 require("mason").setup()
 
@@ -141,7 +127,32 @@ lspconfig.ts_ls.setup {
     single_file_support = false
 }
 
-lspconfig.lua_ls.setup({})
+lspconfig.lua_ls.setup {
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using
+        -- (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = {
+          'vim',
+          'require'
+        },
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = vim.api.nvim_get_runtime_file("", true),
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
+}
 
 lspconfig.rust_analyzer.setup {
     settings = {
