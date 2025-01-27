@@ -21,7 +21,7 @@ require("lazy").setup({
                 styles = {
                     bold = false,
                     italic = false,
-                    transparency = not vim.g.neovide,
+                    transparency = true,
                 },
                 before_highlight = function(group, highlight, palette)
                     if highlight.undercurl then
@@ -35,7 +35,28 @@ require("lazy").setup({
     },
 
     -- syntax highlighting
-    { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+    { 
+        "nvim-treesitter/nvim-treesitter", 
+        build = ":TSUpdate",
+        main = 'nvim-treesitter.configs',
+        opts = {
+            ensure_installed = { 
+                "vimdoc",
+                "html",
+                "c",
+                "cpp",
+                "lua",
+                "typescript",
+                "javascript",
+                "rust",
+                "vento",
+            },
+            highlight = {
+                enable = true,
+                additional_vim_regex_highlighting = false,
+            },
+        }
+    },
 
     -- fuzzy finder
     {
@@ -145,6 +166,14 @@ require("lazy").setup({
         "rluba/jai.vim",
         init = function ()
             vim.g.b = {case_labels = 0}
+        end
+    },
+
+    {
+        "nvimdev/hlsearch.nvim",
+        event = "BufRead",
+        config = function()
+            require("hlsearch").setup()
         end
     },
 })
