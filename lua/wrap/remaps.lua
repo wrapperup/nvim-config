@@ -82,7 +82,7 @@ local oil = require("oil")
 if oil then
     vim.keymap.set("n", "-", function() oil.open() end)
 else
-    vim.keymap.set("n", "-", function() vim.cmd "E" end)
+    vim.keymap.set("n", "-", function() vim.cmd "Ex" end)
 end
 vim.keymap.set("n", "<leader>pv", function() require("oil").open() end)
 

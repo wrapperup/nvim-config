@@ -19,9 +19,9 @@ require("lazy").setup({
         config = function()
             require("rose-pine").setup({
                 styles = {
-                    bold = true,
+                    bold = false,
                     italic = false,
-                    transparency = true,
+                    transparency = not vim.g.neovide,
                 },
                 before_highlight = function(group, highlight, palette)
                     if highlight.undercurl then
@@ -33,19 +33,6 @@ require("lazy").setup({
             vim.cmd("colorscheme rose-pine")
         end
     },
-
-    {
-        "lukas-reineke/indent-blankline.nvim",
-        main = "ibl",
-        opts = {},
-        config = function()
-            -- require("ibl").setup {
-            --     indent = { char = "│" },
-            -- }
-        end
-    },
-
-    { "NMAC427/guess-indent.nvim" },
 
     -- syntax highlighting
     { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
@@ -89,8 +76,6 @@ require("lazy").setup({
         "ray-x/lsp_signature.nvim",
         event = "VeryLazy",
     },
-
-    -- { "github/copilot.vim" },
 
     {
         "folke/trouble.nvim",

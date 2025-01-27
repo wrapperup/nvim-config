@@ -1,13 +1,3 @@
--- auto indent
-require('guess-indent').setup {
-    filetype_exclude = {
-        "javascript",
-        "typescript",
-        "javascriptreact",
-        "typescriptreact",
-    }
-}
-
 vim.filetype.add({
     extension = {
         wgsl = "wgsl",
@@ -20,8 +10,6 @@ vim.filetype.add({
         slang = "slang"
     }
 })
-
-local parser_config = require ("nvim-treesitter.parsers").get_parser_configs()
 
 -- syntax highlighting
 require("nvim-treesitter.configs").setup({
@@ -121,22 +109,15 @@ lspconfig.slangd.setup {
     },
 }
 
-lspconfig.ts_ls.setup {
-    on_attach = on_attach,
-    root_dir = lspconfig.util.root_pattern("package.json"),
-    single_file_support = false
-}
+lspconfig.ts_ls.setup {}
 
 lspconfig.lua_ls.setup {
   settings = {
     Lua = {
       runtime = {
-        -- Tell the language server which version of Lua you're using
-        -- (most likely LuaJIT in the case of Neovim)
         version = 'LuaJIT',
       },
       diagnostics = {
-        -- Get the language server to recognize the `vim` global
         globals = {
           'vim',
           'require'

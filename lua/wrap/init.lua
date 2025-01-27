@@ -68,7 +68,7 @@ if vim.g.neovide then
     vim.api.nvim_set_keymap('t', '<C-S-v>', '<C-R>+', { noremap = true, silent = true})
     vim.api.nvim_set_keymap('v', '<C-S-v>', '<C-R>+', { noremap = true, silent = true})
 
-    vim.o.guifont = "JetBrainsMonoNL NF:h10"
+    vim.o.guifont = "JetBrainsMonoNL NF:h10:#h-slight"
 
     vim.g.neovide_refresh_rate_idle = 160
     vim.g.neovide_refresh_rate = 240
