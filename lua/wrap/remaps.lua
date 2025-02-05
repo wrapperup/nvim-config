@@ -130,22 +130,22 @@ end
 -- Overseer.nvim
 ----------------------------------------------------------------------------
 
-local overseer = require("overseer")
-
-if overseer then
-  vim.api.nvim_create_user_command("OverseerRestartLast", function()
-    local tasks = overseer.list_tasks({ recent_first = true })
-    if vim.tbl_isempty(tasks) then
-      -- no tasks to restart, let the user pick
-      overseer.run_template()
-    else
-      overseer.run_action(tasks[1], "restart")
-    end
-  end, {})
-
-  vim.keymap.set("n", "<F5>", function() vim.cmd "OverseerRestartLast" end)
-  vim.keymap.set("n", "<S-F5>", function() vim.cmd "OverseerRun" end)
-end
+-- local overseer = require("overseer")
+--
+-- if overseer then
+--   vim.api.nvim_create_user_command("OverseerRestartLast", function()
+--     local tasks = overseer.list_tasks({ recent_first = true })
+--     if vim.tbl_isempty(tasks) then
+--       -- no tasks to restart, let the user pick
+--       overseer.run_template()
+--     else
+--       overseer.run_action(tasks[1], "restart")
+--     end
+--   end, {})
+--
+--   vim.keymap.set("n", "<F5>", function() vim.cmd "OverseerRestartLast" end)
+--   vim.keymap.set("n", "<S-F5>", function() vim.cmd "OverseerRun" end)
+-- end
 
 ----------------------------------------------------------------------------
 -- Formatting / Code Completion /Misc

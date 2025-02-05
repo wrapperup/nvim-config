@@ -12,18 +12,25 @@ local function to_posix_path(path)
 end
 
 local function read_entire_file(file)
-    local f = io.open(file, "rb")
-    if f then
-        local content = f:read("*all")
-        f:close()
-        return content
+    local attempts = 5
+    local delay = 5 -- milliseconds
+
+    for i = 1, attempts do
+        local f = io.open(file, "rb")
+        if f then
+            local content = f:read("*all")
+            f:close()
+            return content
+        end
+        vim.loop.sleep(delay) -- Give some time before retrying
     end
+
     return ""
 end
 
 
 vim.api.nvim_set_hl(0, raddbg_breakpoint_ns, { fg="#EE6969" })
-vim.fn.sign_define(raddbg_breakpoint_ns, { text="", texthl=raddbg_breakpoint_ns, linehl="", numhl="" })
+vim.fn.sign_define(raddbg_breakpoint_ns, { text="", texthl=raddbg_breakpoint_ns, linehl="", numhl="" })
 
 local raddbg_root = to_posix_path(os.getenv("APPDATA") .. "\\raddbg\\")
 
@@ -119,14 +126,6 @@ fs_watcher:start(
     end)
 )
 
-local function raddbg_toggle_breakpoint(in_line_number)
-    local file_path = to_posix_path(vim.fn.expand("%:p"))
-    local line_number = in_line_number or vim.api.nvim_win_get_cursor(0)[1]
-
-    raddbg_cmd("toggle_breakpoint", { file_path .. ":" .. line_number });
-    raddbg_cmd("write_project_data");
-end
-
 local function raddbg_goto_current_file()
     local file_path = to_posix_path(vim.fn.expand("%:p"))
     print(file_path)
@@ -136,8 +135,30 @@ local function raddbg_goto_current_file()
     raddbg_cmd("goto_line", { line_number });
 end
 
-vim.keymap.set("n", "<F9>", ":RaddbgToggleBreakpoint<cr>", { silent = true })
+local function raddbg_toggle_breakpoint(in_line_number)
+    local file_path = to_posix_path(vim.fn.expand("%:p"))
+    local line_number = in_line_number or vim.api.nvim_win_get_cursor(0)[1]
 
+    raddbg_cmd("toggle_breakpoint", { file_path .. ":" .. line_number });
+
+    local timer = vim.loop.new_timer()
+    timer:start(20, 0, vim.schedule_wrap(function()
+        raddbg_cmd("write_project_data");
+    end))
+end
+
+local function raddbg_run(in_line_number)
+    raddbg_cmd("run");
+end
+
+
+vim.keymap.set("n", "<F9>", ":RaddbgToggleBreakpoint<cr>", { silent = true })
+-- vim.keymap.set("n", "<F5>", ":RaddbgRun<cr>", { silent = true })
+vim.keymap.set("n", "<F5>", function()
+    if pcall(function() vim.cmd.make() end) then
+        vim.cmd "RaddbgRun"
+    end
+end, { silent = true })
 
 -- Commands
 
@@ -147,6 +168,10 @@ end, {})
 
 vim.api.nvim_create_user_command("RaddbgToggleBreakpoint", function()
     raddbg_toggle_breakpoint()
+end, {})
+
+vim.api.nvim_create_user_command("RaddbgRun", function()
+    raddbg_run()
 end, {})
 
 vim.api.nvim_create_autocmd("BufReadPost", {
