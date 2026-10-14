@@ -15,7 +15,7 @@ vim.opt.expandtab = true
 
 vim.opt.smartindent = true
 
--- vim.opt.wrap = false
+vim.opt.wrap = false
 
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
@@ -32,7 +32,7 @@ vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 25
 
-vim.g.b = {case_labels = 0}
+vim.g.b = { case_labels = 0 }
 
 local my_group = vim.api.nvim_create_augroup("my-group", { clear = true })
 
@@ -50,12 +50,16 @@ vim.opt.shortmess:append("I")
 
 if vim.fn.has('win32') then
     -- Set the shell to pwsh
-    vim.o.shell = "pwsh.exe"
-    vim.o.shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command $PSStyle.OutputRendering = 'PlainText';"
-    vim.o.shellredir = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
-    vim.o.shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode"
-    vim.o.shellquote = ""
-    vim.o.shellxquote = ""
+    vim.o.shell          = "pwsh"
+
+    vim.opt.shellcmdflag =
+    [[-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command $PSStyle.OutputRendering='PlainText'; [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();]]
+
+    vim.opt.shellredir   = [[2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode]]
+    vim.opt.shellpipe    = [[2>&1 | Tee-Object %s; exit $LastExitCode]]
+
+    vim.opt.shellquote   = [[ ]]
+    vim.opt.shellxquote  = [[ ]]
 end
 
 vim.api.nvim_create_autocmd("TermOpen", {
@@ -162,27 +166,27 @@ require("lazy").setup({
     { "stevearc/conform.nvim" },
     {
         "stevearc/overseer.nvim",
-        config = function ()
+        config = function()
             require('overseer').setup()
 
             vim.api.nvim_create_user_command("Make", function(params)
-              -- Insert args at the '$*' in the makeprg
-              local cmd, num_subs = vim.o.makeprg:gsub("%$%*", params.args)
-              if num_subs == 0 then
-                cmd = cmd .. " " .. params.args
-              end
-              local task = require("overseer").new_task({
-                cmd = vim.fn.expandcmd(cmd),
-                components = {
-                  { "on_output_quickfix", open = not params.bang, open_height = 8 },
-                  "default",
-                },
-              })
-              task:start()
+                -- Insert args at the '$*' in the makeprg
+                local cmd, num_subs = vim.o.makeprg:gsub("%$%*", params.args)
+                if num_subs == 0 then
+                    cmd = cmd .. " " .. params.args
+                end
+                local task = require("overseer").new_task({
+                    cmd = vim.fn.expandcmd(cmd),
+                    components = {
+                        { "on_output_quickfix", open = not params.bang, open_height = 8 },
+                        "default",
+                    },
+                })
+                task:start()
             end, {
-              desc = "Run your makeprg as an Overseer task",
-              nargs = "*",
-              bang = true,
+                desc = "Run your makeprg as an Overseer task",
+                nargs = "*",
+                bang = true,
             })
         end
     },
@@ -205,19 +209,21 @@ require("lazy").setup({
         end
     },
 
-    { "echasnovski/mini.comment", version = false },
+    { "echasnovski/mini.comment",           version = false },
 
     -- lsp
     { "neovim/nvim-lspconfig" },
     { "hrsh7th/cmp-nvim-lsp" },
     { "hrsh7th/nvim-cmp" },
+    { "hrsh7th/cmp-nvim-lsp-signature-help" },
     { "L3MON4D3/LuaSnip" },
     { "williamboman/mason.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
 
     {
         "ray-x/lsp_signature.nvim",
-        event = "VeryLazy",
+        event = "InsertEnter",
+        opts = {},
     },
 
     {
@@ -286,8 +292,8 @@ require("lazy").setup({
 
     {
         "rluba/jai.vim",
-        init = function ()
-            vim.g.b = {case_labels = 0}
+        init = function()
+            vim.g.b = { case_labels = 0 }
         end
     },
 
@@ -323,29 +329,29 @@ require("lazy").setup({
             local set = vim.keymap.set
 
             -- Add or skip cursor above/below the main cursor.
-            set({"n", "x"}, "<c-up>",
+            set({ "n", "x" }, "<c-up>",
                 function() mc.lineAddCursor(-1) end)
-            set({"n", "x"}, "<c-down>",
+            set({ "n", "x" }, "<c-down>",
                 function() mc.lineAddCursor(1) end)
-            set({"n", "x"}, "<leader><up>",
+            set({ "n", "x" }, "<leader><up>",
                 function() mc.lineSkipCursor(-1) end)
-            set({"n", "x"}, "<leader><down>",
+            set({ "n", "x" }, "<leader><down>",
                 function() mc.lineSkipCursor(1) end)
 
             -- Add or skip adding a new cursor by matching word/selection
-            set({"n", "x"}, "<leader>n",
+            set({ "n", "x" }, "<leader>n",
                 function() mc.matchAddCursor(1) end)
-            set({"n", "x"}, "<leader>s",
+            set({ "n", "x" }, "<leader>s",
                 function() mc.matchSkipCursor(1) end)
-            set({"n", "x"}, "<leader>N",
+            set({ "n", "x" }, "<leader>N",
                 function() mc.matchAddCursor(-1) end)
-            set({"n", "x"}, "<leader>S",
+            set({ "n", "x" }, "<leader>S",
                 function() mc.matchSkipCursor(-1) end)
 
             -- In normal/visual mode, press `mwap` will create a cursor in every match of
             -- the word captured by `iw` (or visually selected range) inside the bigger
             -- range specified by `ap`. Useful to replace a word inside a function, e.g. mwif.
-            set({"n", "x"}, "mw", function()
+            set({ "n", "x" }, "mw", function()
                 mc.operator({ motion = "iw", visual = true })
                 -- Or you can pass a pattern, press `mwi{` will select every \w,
                 -- basically every char in a `{ a, b, c, d }`.
@@ -356,7 +362,7 @@ require("lazy").setup({
             set("n", "mW", mc.operator)
 
             -- Add all matches in the document
-            set({"n", "x"}, "<leader>A", mc.matchAllAddCursors)
+            set({ "n", "x" }, "<leader>A", mc.matchAllAddCursors)
 
             -- You can also add cursors with any motion you prefer:
             -- set("n", "<right>", function()
@@ -367,21 +373,21 @@ require("lazy").setup({
             -- end)
 
             -- Rotate the main cursor.
-            set({"n", "x"}, "<c-left>", mc.nextCursor)
-            set({"n", "x"}, "<c-right>", mc.prevCursor)
+            set({ "n", "x" }, "<c-left>", mc.nextCursor)
+            set({ "n", "x" }, "<c-right>", mc.prevCursor)
 
             -- Delete the main cursor.
-            set({"n", "x"}, "<leader>x", mc.deleteCursor)
+            set({ "n", "x" }, "<leader>x", mc.deleteCursor)
 
             -- Add and remove cursors with control + left click.
             set("n", "<c-leftmouse>", mc.handleMouse)
             set("n", "<c-leftdrag>", mc.handleMouseDrag)
 
             -- Easy way to add and remove cursors using the main cursor.
-            set({"n", "x"}, "<c-q>", mc.toggleCursor)
+            set({ "n", "x" }, "<c-q>", mc.toggleCursor)
 
             -- Clone every cursor and disable the originals.
-            set({"n", "x"}, "<leader><c-q>", mc.duplicateCursors)
+            set({ "n", "x" }, "<leader><c-q>", mc.duplicateCursors)
 
             set("n", "<esc>", function()
                 if not mc.cursorsEnabled() then
@@ -416,18 +422,18 @@ require("lazy").setup({
                 function() mc.transposeCursors(-1) end)
 
             -- Jumplist support
-            set({"x", "n"}, "<c-i>", mc.jumpForward)
-            set({"x", "n"}, "<c-o>", mc.jumpBackward)
+            set({ "x", "n" }, "<c-i>", mc.jumpForward)
+            set({ "x", "n" }, "<c-o>", mc.jumpBackward)
 
             -- Customize how cursors look.
             local hl = vim.api.nvim_set_hl
             hl(0, "MultiCursorCursor", { link = "Cursor" })
             hl(0, "MultiCursorVisual", { link = "Visual" })
-            hl(0, "MultiCursorSign", { link = "SignColumn"})
+            hl(0, "MultiCursorSign", { link = "SignColumn" })
             hl(0, "MultiCursorMatchPreview", { link = "Search" })
             hl(0, "MultiCursorDisabledCursor", { link = "Visual" })
             hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
-            hl(0, "MultiCursorDisabledSign", { link = "SignColumn"})
+            hl(0, "MultiCursorDisabledSign", { link = "SignColumn" })
         end
     }
 })
@@ -455,7 +461,7 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 vim.keymap.set("v", "<S-Down>", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "<S-Up>", ":m '<-2<CR>gv=gv")
-vim.keymap.set("v", "<S-Left>",  "<gv")
+vim.keymap.set("v", "<S-Left>", "<gv")
 vim.keymap.set("v", "<S-Right>", ">gv")
 
 vim.keymap.set("n", "]d", function() vim.diagnostic.goto_next() end)
@@ -495,7 +501,7 @@ vim.keymap.set("x", "<leader>p", [["_dP]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
 
--- Exit terminal mode like insert 
+-- Exit terminal mode like insert
 vim.keymap.set("t", "<ESC>", "<C-\\><C-N>")
 
 -- harpoon
@@ -520,46 +526,42 @@ vim.keymap.set("n", "<leader>pv", function() require("oil").open() end)
 local builtin = require("telescope.builtin")
 
 local filetype_to_std_lib = {
-  jai = "C:/Repos/jai/jai",
-  odin = "C:/Repos/odin/Odin",
+    jai = "C:/Repos/jai/jai",
+    odin = "C:/Repos/odin/Odin",
 }
 
 local find_file_in_std = function()
-  local filetype = vim.bo.filetype;
+    local filetype = vim.bo.filetype;
 
-  if filetype_to_std_lib[filetype] ~= nil then
-    builtin.find_files({ cwd = filetype_to_std_lib[filetype] })
-  end
+    if filetype_to_std_lib[filetype] ~= nil then
+        builtin.find_files({ cwd = filetype_to_std_lib[filetype] })
+    end
 end
 
 local live_grep_in_std = function()
-  local filetype = vim.bo.filetype;
+    local filetype = vim.bo.filetype;
 
-  if filetype_to_std_lib[filetype] ~= nil then
-    builtin.live_grep({ cwd = filetype_to_std_lib[filetype] })
-  end
+    if filetype_to_std_lib[filetype] ~= nil then
+        builtin.live_grep({ cwd = filetype_to_std_lib[filetype] })
+    end
 end
 
 if builtin then
-  vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
-  vim.keymap.set("n", "<leader>F",  find_file_in_std, {})
-  vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
-  vim.keymap.set("n", "<leader>G",  live_grep_in_std, {})
-  vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
-  vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
-  vim.keymap.set("n", "<leader>fr", builtin.resume, {})
-  vim.keymap.set("n", "<leader>fq", builtin.quickfix, {})
-  vim.keymap.set("n", "gu", function() builtin.lsp_references({}) end, {})
-  vim.keymap.set("n", "gd", function() builtin.lsp_definitions({}) end, {})
+    vim.keymap.set("n", "<leader>ff", function() builtin.find_files({ no_ignore = true }) end, {})
+    vim.keymap.set("n", "<leader>F", find_file_in_std, {})
+    vim.keymap.set("n", "<leader>fg", function() builtin.live_grep({ additional_args = { "-u" } }) end, {})
+    vim.keymap.set("n", "<leader>G", live_grep_in_std, {})
+    vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
+    vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
+    vim.keymap.set("n", "<leader>fr", builtin.resume, {})
+    vim.keymap.set("n", "<leader>fq", builtin.quickfix, {})
+    vim.keymap.set("n", "<leader>fu", function() builtin.lsp_references({}) end, {})
+    vim.keymap.set("n", "<leader>fd", function() builtin.lsp_definitions({}) end, {})
 end
 
 -- Formatting / Code Completion /Misc
 vim.keymap.set("i", "<C-cr>", function() require("cmp").complete() end)
 vim.keymap.set("n", "<M-o>", function() vim.cmd("ClangdSwitchSourceHeader") end)
-vim.keymap.set("n", "<F3>", function() require("conform").format({
-    lsp_fallback = true,
-    async = true,
-}) end)
 
 
 ----------------------------------------------------------------------------
@@ -803,19 +805,19 @@ ins_right {
 
 ins_right {
     "overseer",
-    label = 'overseer',       -- Prefix for task counts
-    colored = true,   -- Color the task icons and counts
+    label = 'overseer', -- Prefix for task counts
+    colored = true,     -- Color the task icons and counts
     symbols = {
         [overseer.STATUS.FAILURE] = " - ",
         [overseer.STATUS.CANCELED] = " - ",
         [overseer.STATUS.SUCCESS] = " - ",
         [overseer.STATUS.RUNNING] = "󰐌 - ",
     },
-    unique = true,       -- Unique-ify non-running task count by name
-    name = nil,           -- List of task names to search for
-    name_not = false,     -- When true, invert the name search
-    status = nil,         -- List of task statuses to display
-    status_not = false,   -- When true, invert the status search
+    unique = true,      -- Unique-ify non-running task count by name
+    name = nil,         -- List of task names to search for
+    name_not = false,   -- When true, invert the name search
+    status = nil,       -- List of task statuses to display
+    status_not = false, -- When true, invert the status search
 }
 
 -- Now don't forget to initialize lualine
@@ -835,29 +837,28 @@ vim.opt.signcolumn = 'yes'
 -- This should be executed before you configure any language server
 local lspconfig_defaults = require('lspconfig').util.default_config
 lspconfig_defaults.capabilities = vim.tbl_deep_extend(
-  'force',
-  lspconfig_defaults.capabilities,
-  require('cmp_nvim_lsp').default_capabilities()
+    'force',
+    lspconfig_defaults.capabilities,
+    require('cmp_nvim_lsp').default_capabilities()
 )
 
 -- This is where you enable features that only work
 -- if there is a language server active in the file
 vim.api.nvim_create_autocmd('LspAttach', {
-  desc = 'LSP actions',
-  callback = function(event)
-    local opts = {buffer = event.buf}
+    desc = 'LSP actions',
+    callback = function(event)
+        local opts = { buffer = event.buf }
 
-    vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-    vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-    vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
-    vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
-    vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
-    vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
-    vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
-    vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-    vim.keymap.set({'n', 'x'}, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
-    vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
-  end,
+        vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+        vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
+        vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
+        vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
+        vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
+        vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
+        vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
+        vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+        vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+    end,
 })
 
 local cmp = require('cmp')
@@ -865,7 +866,7 @@ local cmp = require('cmp')
 cmp.setup({
     sources = {
         { name = 'nvim_lsp' },
-        {name = 'luasnip'},
+        { name = 'luasnip' },
     },
     mapping = {
         ['<C-y>'] = cmp.mapping.confirm({ select = false }),
@@ -907,46 +908,85 @@ require("conform").setup {
 require("mason").setup()
 
 local lspconfig = require('lspconfig')
+local configs = require("lspconfig.configs")
 
 lspconfig.ols.setup {}
 
-lspconfig.slangd.setup {
-    filetypes = {
-        "slang",
+if not configs.jails then
+    configs.jails = {
+        default_config = {
+            cmd = { 'jails' },
+            root_dir = lspconfig.util.root_pattern("jails.json", "build.jai", "main.jai"),
+            filetypes = { 'jai' },
+            name = "Jails",
+        },
+    }
+end
+
+vim.filetype.add({
+    extension = {
+        ws = "wirescript",
     },
-}
+})
+
+if not configs.wirescript then
+    configs.wirescript = {
+        default_config = {
+            cmd = { 'wirescript' },
+            root_markers = { '.git' },
+            filetypes = { 'wirescript' },
+            name = "Wirescript",
+        },
+    }
+end
+
+lspconfig.jails.setup {}
+
+lspconfig.slangd.setup {}
 
 lspconfig.ts_ls.setup {}
 
-lspconfig.lua_ls.setup {
-  settings = {
-    Lua = {
-      runtime = {
-        version = 'LuaJIT',
-      },
-      diagnostics = {
-        globals = {
-          'vim',
-          'require'
+lspconfig.pyright.setup {
+    settings = {
+        python = {
+            analysis = {
+                extraPaths = {
+                    "C:/path/to/blender-stubs",
+                },
+            },
         },
-      },
-      workspace = {
-        -- Make the server aware of Neovim runtime files
-        library = vim.api.nvim_get_runtime_file("", true),
-      },
-      -- Do not send telemetry data containing a randomized but unique identifier
-      telemetry = {
-        enable = false,
-      },
     },
-  },
+}
+
+lspconfig.lua_ls.setup {
+    settings = {
+        Lua = {
+            runtime = {
+                version = 'LuaJIT',
+            },
+            diagnostics = {
+                globals = {
+                    'vim',
+                    'require'
+                },
+            },
+            workspace = {
+                -- Make the server aware of Neovim runtime files
+                library = vim.api.nvim_get_runtime_file("", true),
+            },
+            -- Do not send telemetry data containing a randomized but unique identifier
+            telemetry = {
+                enable = false,
+            },
+        },
+    },
 }
 
 lspconfig.rust_analyzer.setup {
     settings = {
         ['rust-analyzer'] = {
             cargo = {
-                loadOutDirsFromCheck = "true",
+                loadOutDirsFromCheck = true,
             },
             checkOnSave = false,
         },
@@ -965,11 +1005,11 @@ local raddbg_breakpoint_ns = "RaddbgBreakpoint"
 local raddbg_group = vim.api.nvim_create_augroup("raddbg-group", { clear = true })
 
 local function starts_with(str, start)
-  return string.find(str, "^" .. start) ~= nil
+    return string.find(str, "^" .. start) ~= nil
 end
 
 local function to_posix_path(path)
-  return path:gsub("\\", "/")
+    return path:gsub("\\", "/")
 end
 
 local function read_entire_file(file)
@@ -986,20 +1026,22 @@ local function read_entire_file(file)
         vim.loop.sleep(delay) -- Give some time before retrying
     end
 
-    return ""
+    return nil
 end
 
 
-vim.api.nvim_set_hl(0, raddbg_breakpoint_ns, { fg="#EE6969" })
-vim.fn.sign_define(raddbg_breakpoint_ns, { text="", texthl=raddbg_breakpoint_ns, linehl="", numhl="" })
+vim.api.nvim_set_hl(0, raddbg_breakpoint_ns, { fg = "#EE6969" })
+vim.fn.sign_define(raddbg_breakpoint_ns, { text = "", texthl = raddbg_breakpoint_ns, linehl = "", numhl = "" })
 
 local raddbg_root = to_posix_path(os.getenv("APPDATA") .. "\\raddbg\\")
+-- Current RADDBG stores breakpoints in the user configuration.
+local raddbg_breakpoint_file = raddbg_root .. "default.raddbg_user"
 
 ---@string
 ---@table
 local function raddbg_cmd(cmd, args)
     local input = {
-        "raddbg",
+        "raddbg.exe",
         "--ipc",
         cmd,
         unpack(args or {}),
@@ -1013,39 +1055,42 @@ local raddbg_breakpoints = {}
 local function sync_breakpoints(file_content)
     raddbg_breakpoints = {}
 
-    -- Define a pattern to match each breakpoint block
-    local breakpoint_pattern = 'breakpoint:%s*{.-location:%s*%("(.-)":(%d+)%)'
+    local seen = {}
+    local record = nil
+    local function add_record()
+        if not record then return end
+        local source = table.concat(record, "\n"):match('source_location:%s*"([^"]+)"')
+        if not source then return end -- Address/function breakpoints have no source sign.
+        local location, line = source:match("^(.-):(%d+):%d+$")
+        if not location then location, line = source:match("^(.-):(%d+)$") end
+        if not location or location == "" or tonumber(line) < 1 then return end
 
-    -- Iterate over all breakpoints in the file content
-    for location, line in string.gmatch(file_content, breakpoint_pattern) do
-        local combined_path = vim.fn.fnamemodify(raddbg_root .. location, ":p")
-        local absolute_path = vim.fn.resolve(combined_path)
-
-        table.insert(raddbg_breakpoints, {
-            location = absolute_path,
-            line = tonumber(line)
-        })
+        location = to_posix_path(location)
+        if not location:match("^%a:/") and not location:match("^/") then
+            location = raddbg_root .. location
+        end
+        local absolute_path = vim.fn.resolve(vim.fn.fnamemodify(location, ":p"))
+        local key = to_posix_path(absolute_path):lower() .. ":" .. line
+        if not seen[key] then
+            seen[key] = true
+            table.insert(raddbg_breakpoints, { location = absolute_path, line = tonumber(line) })
+        end
     end
-end
 
--- local function add_breakpoint_signs(buf)
---     local signs = {}
---
---     for k, v in pairs(raddbg_breakpoints) do
---         local id = vim.tbl_count(raddbg_breakpoints)
---         print("ok")
---         table.insert(signs, {
---             buffer = buf,
---             group = raddbg_breakpoint_ns,
---             id = id,
---             lnum = v.line,
---             name = v.location,
---             priority = 21,
---         })
---     end
---
---     vim.fn.sign_placelist(signs)
--- end
+    -- RADDBG writes unindented top-level records. Keep each record together so
+    -- braces and fields such as project/hit_count can precede source_location,
+    -- without accidentally treating a watch_pin's source_location as a breakpoint.
+    for line in (file_content .. "\n"):gmatch("([^\r\n]*)\r?\n") do
+        local kind, body = line:match("^([%w_]+):%s*(.*)")
+        if kind then
+            add_record()
+            record = kind == "breakpoint" and { body } or nil
+        elseif record then
+            table.insert(record, line)
+        end
+    end
+    add_record()
+end
 
 local function refresh_all_breakpoint_signs()
     local signs = {}
@@ -1053,13 +1098,11 @@ local function refresh_all_breakpoint_signs()
     for _, v in pairs(raddbg_breakpoints) do
         local buffer = vim.fn.bufnr(v.location)
 
-        if buffer ~= -1 then
-            local id = vim.tbl_count(signs)
+        if buffer ~= -1 and vim.api.nvim_buf_is_loaded(buffer) then
             table.insert(signs, {
-                id = id,
                 group = raddbg_breakpoint_group,
                 name = raddbg_breakpoint_ns,
-                buffer = vim.fn.bufnr(v.location),
+                buffer = buffer,
                 lnum = v.line,
                 priority = 21,
             })
@@ -1070,22 +1113,48 @@ local function refresh_all_breakpoint_signs()
     vim.fn.sign_placelist(signs)
 end
 
-local function read_breakpoints_from_project()
-    local file = read_entire_file(raddbg_root .. "default.raddbg_project")
+local function read_raddbg_breakpoints()
+    local file = read_entire_file(raddbg_breakpoint_file)
+    if not file then return end -- Keep the last signs during a replacement/sharing violation.
     sync_breakpoints(file)
     refresh_all_breakpoint_signs()
 end
 
 local uv = vim.uv
 
+-- Close the old handles if this integration is sourced again.
+if _G.raddbg_breakpoint_sync then
+    _G.raddbg_breakpoint_sync()
+end
 local fs_watcher = uv.new_fs_event()
-fs_watcher:start(
-    raddbg_root .. "default.raddbg_project",
-    {},
-    vim.schedule_wrap(function(_, _, events)
-        read_breakpoints_from_project()
-    end)
-)
+local refresh_timer = uv.new_timer()
+local stopped = false
+local function stop_breakpoint_sync()
+    if stopped then return end
+    stopped = true
+    fs_watcher:stop()
+    fs_watcher:close()
+    refresh_timer:stop()
+    refresh_timer:close()
+end
+_G.raddbg_breakpoint_sync = stop_breakpoint_sync
+
+-- RADDBG saves through .temp/.old files and renames them into place. Watching
+-- the directory survives those replacements; debounce until the save finishes.
+local watching, watch_error = fs_watcher:start(raddbg_root, {}, function(err, filename)
+    if stopped or err then return end
+    if filename and filename:lower() ~= "default.raddbg_user" then return end
+    refresh_timer:start(50, 0, vim.schedule_wrap(function()
+        if not stopped then read_raddbg_breakpoints() end
+    end))
+end)
+if not watching then
+    vim.notify("RADDBG breakpoint watcher: " .. tostring(watch_error), vim.log.levels.WARN)
+end
+vim.api.nvim_create_autocmd("VimLeavePre", {
+    group = raddbg_group,
+    callback = stop_breakpoint_sync,
+})
 
 local function raddbg_goto_current_file()
     local file_path = to_posix_path(vim.fn.expand("%:p"))
@@ -1102,24 +1171,46 @@ local function raddbg_toggle_breakpoint(in_line_number)
 
     raddbg_cmd("toggle_breakpoint", { file_path .. ":" .. line_number });
 
-    local timer = vim.loop.new_timer()
-    timer:start(20, 0, vim.schedule_wrap(function()
-        raddbg_cmd("write_project_data");
-    end))
-end
-
-local function raddbg_run(in_line_number)
-    raddbg_cmd("run");
+    vim.defer_fn(function()
+        raddbg_cmd("write_user_data")
+    end, 50)
 end
 
 
 vim.keymap.set("n", "<F9>", ":RaddbgToggleBreakpoint<cr>", { silent = true })
 -- vim.keymap.set("n", "<F5>", ":RaddbgRun<cr>", { silent = true })
-vim.keymap.set("n", "<F5>", function()
-    if pcall(function() vim.api.nvim_exec2("silent! make", { output = true }) end) then
-        -- vim.cmd [[botright copen]]
-        vim.cmd "RaddbgRun"
+
+local function run_make(prog, on_success)
+    local saved = vim.o.makeprg
+    vim.o.makeprg = prog
+    vim.cmd("silent! make")
+    vim.o.makeprg = saved
+
+    -- quickfix has entries only if there were errors/warnings
+    local has_errors = false
+    for _, item in ipairs(vim.fn.getqflist()) do
+        if item.valid == 1 then
+            has_errors = true
+            break
+        end
     end
+
+    if has_errors then
+        vim.cmd("botright copen")
+    elseif on_success then
+        vim.cmd("cclose")
+        on_success()
+    end
+end
+
+-- F5: full build + launch under raddbg
+vim.keymap.set("n", "<F5>", function()
+    run_make([[.\build.bat]], function() vim.cmd("RaddbgRun") end)
+end, { silent = true })
+
+-- F6 (or whatever): hotreload only — no relaunch
+vim.keymap.set("n", "<C-A-F11>", function()
+    run_make([[.\hotreload.bat]])
 end, { silent = true })
 
 -- Commands
@@ -1133,10 +1224,54 @@ vim.api.nvim_create_user_command("RaddbgToggleBreakpoint", function()
 end, {})
 
 vim.api.nvim_create_user_command("RaddbgRun", function()
-    raddbg_run()
+    raddbg_cmd("run");
 end, {})
 
-vim.api.nvim_create_autocmd("BufReadPost", {
-    pattern = "*",
-    callback = read_breakpoints_from_project
+vim.api.nvim_create_user_command("RaddbgKillAll", function()
+    raddbg_cmd("kill_all");
+end, {})
+
+vim.api.nvim_create_user_command("RaddbgRestart", function()
+    raddbg_cmd("restart");
+end, {})
+
+-- Stop debugging *synchronously*. raddbg's --ipc is fire-and-terminate (it
+-- enqueues the command and exits immediately), so a bare kill_all races any
+-- build we kick off right after: the linker hits a still-locked binary because
+-- raddbg hasn't finished tearing the target down yet.
+--
+-- raddbg launches targets via the Win32 debug API, so the debuggee runs as a
+-- child process of raddbg.exe, and that child is exactly what holds the lock on
+-- the output binary. So: issue the kill, then block until raddbg has no child
+-- processes left. This needs no project-specific path -- it works for whatever
+-- target raddbg is currently driving.
+local function raddbg_stop_sync()
+    raddbg_cmd("kill_all")
+
+    local script = [[
+$ErrorActionPreference='SilentlyContinue'
+$deadline=(Get-Date).AddSeconds(5)
+while((Get-Date) -lt $deadline){
+  $rad=@(Get-CimInstance Win32_Process -Filter "Name='raddbg.exe'")
+  if($rad.Count -eq 0){ break }
+  $filter=($rad | ForEach-Object { "ParentProcessId=$($_.ProcessId)" }) -join ' OR '
+  $kids=@(Get-CimInstance Win32_Process -Filter $filter)
+  if($kids.Count -eq 0){ break }
+  Start-Sleep -Milliseconds 50
+}
+]]
+
+    vim.system({ "pwsh", "-NoLogo", "-NoProfile", "-Command", script }):wait(6000)
+end
+
+vim.api.nvim_create_user_command("RaddbgStop", function()
+    raddbg_stop_sync()
+end, {})
+
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufEnter", "FocusGained" }, {
+    group = raddbg_group,
+    callback = read_raddbg_breakpoints,
 })
+read_raddbg_breakpoints()
+
+vim.keymap.set("n", "<F9>", ":RaddbgToggleBreakpoint<cr>", { silent = true })
